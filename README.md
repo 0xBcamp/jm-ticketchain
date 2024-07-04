@@ -1,3 +1,10 @@
+# Set up instructions
+1. clone github
+2. cd ticketchain
+3. npm install
+(make sure node version is >= v18.17.0, could use node -v to check)
+4. npm run dev
+
 # Challenge
 Event organizers and attendees face significant issues with current ticketing systems, such as high service fees, ticket scalping, and the risk of counterfeit tickets. These problems result in financial losses and diminished trust in the ticketing process. Organizers struggle with managing ticket sales efficiently, while buyers are concerned about the authenticity and security of their purchased tickets.
 
