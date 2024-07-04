@@ -10,6 +10,10 @@ import {
   IconButton,
   Card,
 } from "@material-tailwind/react";
+import { createThirdwebClient } from "thirdweb";
+import { ThirdwebProvider, ConnectButton, lightTheme, } from "thirdweb/react";
+
+
 
 const Header = () => {
   const [openNav, setOpenNav] = React.useState(false);
@@ -21,12 +25,14 @@ const Header = () => {
     );
   }, []);
 
+  const client = createThirdwebClient({ clientId: '822b00f39eb55e419a68433dee05df86' });
+
   const navList = (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6 primary-text">
       <Typography
         as="li"
         variant="medium"
-        
+
         className="p-1 font-normal"
       >
         <Link href="/about" className="flex items-center">
@@ -36,7 +42,7 @@ const Header = () => {
       <Typography
         as="li"
         variant="medium"
-        
+
         className="p-1 font-normal"
       >
         <Link href="/login" className="flex items-center">
@@ -57,7 +63,7 @@ const Header = () => {
         variant="medium"
         className="p-1 font-normal"
       >
-        <Link href="#" className="flex items-center">
+        <Link href="/search-event" className="flex items-center">
           Browse Events
         </Link>
       </Typography>
@@ -72,17 +78,17 @@ const Header = () => {
             <Typography
               className="mr-4 cursor-pointer py-1.5 font-medium primary-text"
             >
-                <Link href="/">
-              <h1 className="text-left text-2xl m-auto ">
-                <span className=" font-extrabold">Ticket</span>
-                <span>chain</span>
-              </h1></Link>
+              <Link href="/">
+                <h1 className="text-left text-2xl m-auto ">
+                  <span className=" font-extrabold">Ticket</span>
+                  <span>chain</span>
+                </h1></Link>
             </Typography>
             <div className="mr-4 hidden lg:block">{navList}</div>
             <div className="flex items-center gap-4">
-              
+
               <div className="flex items-center gap-x-1">
-                <Button
+                {/* <Button
                   variant="text"
                   size="md"
                   className="hidden lg:inline-block border border-cyan-700 primary-text"
@@ -91,14 +97,24 @@ const Header = () => {
                 </Button>
                 <Link href="/login" >
 
-                <Button
-                //   variant="gradient"
-                  size="md"
-                  className="hidden lg:inline-block bg-cyan-700"
-                >
-                  <span>Login </span>
-                </Button>
-                </Link>
+                  <Button
+                    //   variant="gradient"
+                    size="md"
+                    className="hidden lg:inline-block bg-cyan-700"
+                  >
+                    <span>Login </span>
+                  </Button>
+                </Link> */}
+                <ThirdwebProvider>
+                  <ConnectButton client={client} theme={lightTheme({
+                    colors: {
+                      accentText: "#39a3c6",
+                      accentButtonBg: "#39a3c6",
+                      primaryText: "#2a7483",
+                      primaryButtonBg: "#2e94a8",
+                    },
+                  })} />
+                </ThirdwebProvider>
               </div>
               <IconButton
                 variant="text"
@@ -142,20 +158,23 @@ const Header = () => {
           <MobileNav open={openNav}>
             {navList}
             <div className="flex items-center gap-x-1">
-              <Button fullWidth variant="text" size="md" className="border border-cyan-700 primary-text">
+              {/* <Button fullWidth variant="text" size="md" className="border border-cyan-700 primary-text">
                 <span>Sign up</span>
               </Button>
               <Link href="/login" >
 
-              <Button fullWidth  size="md" className="bg-cyan-700">
-                <span>Log in</span>
-              </Button>
+                <Button fullWidth size="md" className="bg-cyan-700">
+                  <span>Log in</span>
+                </Button>
 
-  </Link>         
-   </div>
+              </Link> */}
+              <ThirdwebProvider>
+                <ConnectButton client={client} />
+              </ThirdwebProvider>
+            </div>
           </MobileNav>
         </Navbar>
-       
+
       </div>
     </div>
   );

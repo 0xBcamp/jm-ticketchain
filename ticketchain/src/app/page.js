@@ -11,6 +11,9 @@ import {
   Card,
 } from "@material-tailwind/react";
 import ticket from "/public/img/brand/ticket.png";
+import { register } from 'swiper/element/bundle';
+register();
+
 // import Header from "./components/header/header";
 export default function Home() {
   return (
