@@ -27,3 +27,7 @@ body {
   color: #0C8596; 
 
 }
+input:focus {
+  outline: none;
+  box-shadow: none;
+}
