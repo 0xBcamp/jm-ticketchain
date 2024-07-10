@@ -25,7 +25,7 @@ const Header = () => {
     );
   }, []);
 
-  const client = createThirdwebClient({ clientId: '822b00f39eb55e419a68433dee05df86' });
+  const client = createThirdwebClient({ clientId: '3a1b881fdf47d438ea101e2972c175fa' });
 
   const navList = (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6 primary-text">
