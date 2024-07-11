@@ -1,4 +1,5 @@
 "use client"
+
 import Link from "next/link";
 import React from "react";
 
@@ -168,9 +169,7 @@ const Header = () => {
                 </Button>
 
               </Link> */}
-              <ThirdwebProvider>
-                <ConnectButton client={client} />
-              </ThirdwebProvider>
+             
             </div>
           </MobileNav>
         </Navbar>

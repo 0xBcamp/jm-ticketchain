@@ -12,6 +12,7 @@ import {
 } from "@material-tailwind/react";
 import ticket from "/public/img/brand/ticket.png";
 import { register } from 'swiper/element/bundle';
+import Eventlist from "./search-event/eventlist";
 
 register();
 
@@ -54,6 +55,7 @@ export default function Home() {
       <div className="bg-cyan-800 h-30 w-full flex items-center p-5">
         <h1 className="text-white  text-3xl text-center ">Decentralized ticketing platform built on Mode Blockchain </h1>
       </div>
+     
     </>
   );
 }

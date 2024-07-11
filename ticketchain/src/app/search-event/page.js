@@ -1,7 +1,8 @@
-import React from "react";
-import dynamic from "next/dynamic";
 
-// const Input = dynamic(() => import("@material-tailwind/react").then((mod) => mod.Input), { ssr: false });
+
+import dynamic from "next/dynamic";
+import Eventlist from "./eventlist";
+// const Input =../components/header/eventlist => import("@material-tailwind/react").then((mod) => mod.Input), { ssr: false });
 
 const searchEvent = () => {
   return (
@@ -18,35 +19,12 @@ const searchEvent = () => {
               Browse Events
             </h1>
           </div>
-          <figcaption class="absolute bottom-10 left-2/4 flex  -translate-x-2/4 justify-center rounded-xl border border-white bg-white/75 py-4 px-6 shadow-lg shadow-black/5 saturate-200 backdrop-blur-sm">
-            <div className=" ">
-              <div className="w-full flex  bg-white/50">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="size-10 m-auto p-2"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                  />
-                </svg>
-
-                <input
-                  label="Search"
-                  className="p-3 lg:text-2xl  text-xl  bg-transparent text-black"
-                  placeholder="Search by City or Event Name"
-                />
-              </div>
-            </div>
-          </figcaption>
+        
         </figure>
       </div>
-      <div className="w-full"></div>
+      <div className="w-full">
+        <Eventlist />
+      </div>
     </div>
   );
 };
