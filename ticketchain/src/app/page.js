@@ -31,11 +31,10 @@ export default function Home() {
             <Link href="/search-event" className="flex items-center">
 
               <Button
-                variant="text"
                 size="lg"
                 className=" lg:inline-block border bg-cyan-700  text-white"
               >
-                <span className=" text-white">Browse Events</span>
+                Browse Events
               </Button>
               </Link>
             

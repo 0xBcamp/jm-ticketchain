@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React from "react";
+import { Avatar } from "@material-tailwind/react";
 
 import {
   Navbar,
@@ -18,6 +19,9 @@ import { ThirdwebProvider, ConnectButton, lightTheme, } from "thirdweb/react";
 
 const Header = () => {
   const [openNav, setOpenNav] = React.useState(false);
+  const [isConnected, setIsConnected] = React.useState(false);
+  
+
 
   React.useEffect(() => {
     window.addEventListener(
@@ -28,6 +32,18 @@ const Header = () => {
 
   const client = createThirdwebClient({ clientId: '3a1b881fdf47d438ea101e2972c175fa' });
 
+  React.useEffect(() => {
+    // Check Thirdweb connection status
+    const checkConnection = async () => {
+      if (client && client.isConnected) {
+        const isConnected = client.isConnected;
+        setIsConnected(isConnected);
+        console.log(isConnected)
+      }
+    };
+    
+    checkConnection();
+  }, [client]);
   const navList = (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6 primary-text">
       <Typography
@@ -88,7 +104,7 @@ const Header = () => {
             <div className="mr-4 hidden lg:block">{navList}</div>
             <div className="flex items-center gap-4">
 
-              <div className="flex items-center gap-x-1">
+              <div className="flex items-center gap-x-4">
                 {/* <Button
                   variant="text"
                   size="md"
@@ -116,6 +132,13 @@ const Header = () => {
                     },
                   })} />
                 </ThirdwebProvider>
+                {isConnected && (
+
+                <Link href="/dashboard" >
+                <Avatar src="https://docs.material-tailwind.com/img/face-2.jpg" alt="avatar" className="border shadow" />
+                </Link>
+                 )}
+
               </div>
               <IconButton
                 variant="text"

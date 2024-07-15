@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import {
   Card,
@@ -10,8 +9,14 @@ import {
   Button,
   Badge,
 } from "@material-tailwind/react";
-import events from "../search-event/event";
+import {events} from "../search-event/event.js";
 import { useState } from "react";
+import Link from "next/link";
+import { createThirdwebClient, getContract } from "thirdweb";
+import { defineChain } from "thirdweb/chains";
+import { prepareEvent, getContractEvents } from "thirdweb";
+import { useReadContract } from "thirdweb/react";
+
 
 const Eventlist = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -22,6 +27,30 @@ const Eventlist = () => {
       event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       event.location.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+ 
+  // const client = createThirdwebClient({ 
+  //   clientId: "3a1b881fdf47d438ea101e2972c175fa"
+  //  });
+
+  //  const contract = getContract({ 
+  //   client, 
+  //   chain: defineChain(919), 
+  //   address: "0x24933eB4854f95285e54F641bb67D6C0D8bD6C91"
+  // });
+
+  // const { data, isLoading } = useReadContract({ 
+  //   contract, 
+  //   method: "function events(uint256) view returns (uint256 eventId, string name, uint256 date, uint256 time, string location, uint256 ticketPrice, uint256 totalTickets, uint256 availableTickets, address organizer, uint256 funds, string eventImageIPFSHash)", 
+  //   params: [] 
+  // });
+  // useEffect(() => {
+  //   if (!isLoading && data) {
+  //     setSearchQuery(data);
+  //   }
+  // }, [data, isLoading]);
+
+
 
   return (
     <div className="flex flex-col justify-center">
@@ -138,7 +167,9 @@ const Eventlist = () => {
               </Typography>
             </CardBody>
             <CardFooter className="pt-0">
+              <Link href={`../search-event/${event.id}`}>
               <Button className="bg-cyan-700">Buy Ticket</Button>
+              </Link>
             </CardFooter>
           </Card>
         ))}

@@ -1,7 +1,9 @@
-
-
+"use client";
 import dynamic from "next/dynamic";
 import Eventlist from "./eventlist";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 // const Input =../components/header/eventlist => import("@material-tailwind/react").then((mod) => mod.Input), { ssr: false });
 
 const searchEvent = () => {
@@ -19,11 +21,12 @@ const searchEvent = () => {
               Browse Events
             </h1>
           </div>
-        
         </figure>
       </div>
       <div className="w-full">
-        <Eventlist />
+        <QueryClientProvider client={queryClient}>
+          <Eventlist/>
+        </QueryClientProvider>{" "}
       </div>
     </div>
   );
