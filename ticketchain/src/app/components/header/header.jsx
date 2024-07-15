@@ -134,7 +134,7 @@ const Header = () => {
                 </ThirdwebProvider>
                 {isConnected && (
 
-                <Link href="/dashboard" >
+                <Link href="" >
                 <Avatar src="https://docs.material-tailwind.com/img/face-2.jpg" alt="avatar" className="border shadow" />
                 </Link>
                  )}
