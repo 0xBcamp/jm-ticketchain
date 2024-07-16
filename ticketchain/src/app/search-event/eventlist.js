@@ -29,26 +29,27 @@ const Eventlist = () => {
   );
 
  
-  // const client = createThirdwebClient({ 
-  //   clientId: "3a1b881fdf47d438ea101e2972c175fa"
-  //  });
+  const client = createThirdwebClient({ 
+    clientId: "3a1b881fdf47d438ea101e2972c175fa"
+   });
 
-  //  const contract = getContract({ 
-  //   client, 
-  //   chain: defineChain(919), 
-  //   address: "0x24933eB4854f95285e54F641bb67D6C0D8bD6C91"
-  // });
+   const contract = getContract({ 
+    client, 
+    chain: defineChain(919), 
+    address: "0x24933eB4854f95285e54F641bb67D6C0D8bD6C91"
+  });
 
-  // const { data, isLoading } = useReadContract({ 
-  //   contract, 
-  //   method: "function events(uint256) view returns (uint256 eventId, string name, uint256 date, uint256 time, string location, uint256 ticketPrice, uint256 totalTickets, uint256 availableTickets, address organizer, uint256 funds, string eventImageIPFSHash)", 
-  //   params: [] 
-  // });
-  // useEffect(() => {
-  //   if (!isLoading && data) {
-  //     setSearchQuery(data);
-  //   }
-  // }, [data, isLoading]);
+  const { data, isLoading } = useReadContract({ 
+    contract, 
+    method: "function events(uint256) view returns (uint256 eventId, string name, uint256 date, uint256 time, string location, uint256 ticketPrice, uint256 totalTickets, uint256 availableTickets, address organizer, uint256 funds, string eventImageIPFSHash)", 
+    params: [] 
+  });
+  
+  useEffect(() => {
+    if (!isLoading && data) {
+      setSearchQuery(data);
+    }
+  }, [data, isLoading]);
 
 
 
