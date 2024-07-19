@@ -27,8 +27,8 @@
 //   CubeTransparentIcon,
 // } from "@heroicons/react/24/outline";
  
-const page = () => {
-  return (
+//const page = () => {
+  //return (
     // <div>
     //      <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
     //   <div className="mb-2 flex items-center gap-4 p-4">
@@ -171,8 +171,81 @@ const page = () => {
     //   </Alert>
     // </Card>
     // </div>
-    <>  </>
-  )
-}
+    //<>  </>
+  //)
+//}
 
-export default page
+//export default page
+
+// src/app/dashboard/page.js
+// src/app/dashboard/page.js
+
+import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import './Sidebar.css';
+
+const Sidebar = ({ isOpen, onClose }) => {
+  return (
+    <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+      <button className="close-button" onClick={onClose}>X</button>
+      <div className="sidebar-content">
+        <h2>Welcome back!</h2>
+        <h3>User</h3>
+        <ul>
+          <li>My Tickets</li>
+          <li>Upcoming Events</li>
+          <li>Past Events</li>
+          <li>My Listings</li>
+          <li>My Digital Collectibles</li>
+          <li>My Profile</li>
+          <li>My Settings</li>
+          <li>Sign Out</li>
+        </ul>
+        <button className="dashboard-button">
+          <FontAwesomeIcon icon={faUser} /> Dashboard
+        </button>
+        <button className="help-button">Need Help?</button>
+      </div>
+    </div>
+  );
+};
+
+const Dashboard = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const handleSidebarOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleSidebarClose = () => {
+    setIsOpen(false);
+  };
+
+  return (
+    <div>
+      <button onClick={handleSidebarOpen} className="open-sidebar-button">
+        Open Sidebar
+      </button>
+      <Sidebar isOpen={isOpen} onClose={handleSidebarClose} />
+      <div className="dashboard-content">
+        <h1>Dashboard</h1>
+        <p>Welcome to the dashboard!</p>
+        {/* Add your dashboard content here */}
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+
+
+
+
+
+
+
+
+
+

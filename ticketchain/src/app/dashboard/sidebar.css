@@ -1,0 +1,66 @@
+/* Sidebar.css */
+.sidebar {
+  width: 250px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #f4f4f4;
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(-100%);
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar-content {
+  padding: 20px;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.user-button {
+  display: block;
+  margin: 20px;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.user-button:hover {
+  background-color: #0056b3;
+}
+
+.help-button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.help-button:hover {
+  background-color: #0056b3;
+}
+
+.dashboard-content {
+  margin-left: 260px; /* Adjust based on the width of your sidebar */
+  padding: 20px;
+}
+
+  
+  
+  
+  
+  
