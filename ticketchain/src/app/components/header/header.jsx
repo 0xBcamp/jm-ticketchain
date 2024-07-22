@@ -8,17 +8,27 @@ import {
   MobileNav,
   Typography,
   IconButton,
-  Butto
+  Button,
 } from "@material-tailwind/react";
 import { ThirdwebProvider, ConnectButton, lightTheme } from "thirdweb/react";
 import { useActiveWalletConnectionStatus } from "thirdweb/react";
 import { createThirdwebClient } from "thirdweb";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons'; // Import the user icon
+//import { DefaultSidebar } from '../../dashboard/page'; // Correct import path
+import DefaultSidebar from '../../dashboard/page';
 
 
 const Header = () => {
   const [openNav, setOpenNav] = React.useState(false);
   const isConnected = useActiveWalletConnectionStatus();
   console.log(isConnected)
+    const [sidebarOpen, setSidebarOpen] = React.useState(false); // State for sidebar visibility
+ const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen); // Toggle sidebar visibility
+  };
+
+
   React.useEffect(() => {
     window.addEventListener(
       "resize",
@@ -26,39 +36,58 @@ const Header = () => {
     );
   }, []);
 
-  const client = createThirdwebClient({ clientId: '3a1b881fdf47d438ea101e2972c175fa' });
+  const client = createThirdwebClient({
+    clientId: '3a1b881fdf47d438ea101e2972c175fa'
+  });
 
-  // React.useEffect(() => {
-  //   // Check Thirdweb connection status
-  //   const checkConnection = async () => {
-  //     if (client && client.isConnected) {
-  //       const isConnected = client.isConnected;
-  //       setIsConnected(isConnected);
-  //       console.log(isConnected)
-  //     }
-  //   };
+  React.useEffect(() => {
+    // Check Thirdweb connection status
+    const checkConnection = async () => {
+      if (client && client.isConnected) {
+        const isConnected = client.isConnected;
+        setIsConnected(isConnected);
+        console.log(isConnected);
+      }
+    };
 
-  //   checkConnection();
-  // }, [client]);
+    checkConnection();
+  }, [client]);
+
   const navList = (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6 primary-text">
-      <Typography as="li" variant="medium" className="p-1 font-normal">
-        <Link href="/about" className="flex items-center">
+      <Typography
+        as="li"
+        variant="medium"
+        className="p-1 font-normal"
+      >
+        <Link href="/about">
           About
         </Link>
       </Typography>
-      <Typography as="li" variant="medium" className="p-1 font-normal">
-        <Link href="/login" className="flex items-center">
+      <Typography
+        as="li"
+        variant="medium"
+        className="p-1 font-normal"
+      >
+        <Link href="/login">
           Solution
         </Link>
       </Typography>
-      <Typography as="li" variant="medium" className="p-1 font-normal">
-        <Link href="#" className="flex items-center">
+      <Typography
+        as="li"
+        variant="medium"
+        className="p-1 font-normal"
+      >
+        <Link href="#">
           Pricing
         </Link>
       </Typography>
-      <Typography as="li" variant="medium" className="p-1 font-normal">
-        <Link href="/search-event" className="flex items-center">
+      <Typography
+        as="li"
+        variant="medium"
+        className="p-1 font-normal"
+      >
+        <Link href="/search-event">
           Browse Events
         </Link>
       </Typography>
@@ -73,6 +102,7 @@ const Header = () => {
             <Typography className="mr-4 cursor-pointer py-1.5 font-medium primary-text">
               <Link href="/">
                 <h1 className="text-left text-2xl m-auto ">
+
                   <span className="font-extrabold">Ticket</span>
                   <span>chain</span>
                 </h1>
@@ -102,6 +132,7 @@ const Header = () => {
                     ""
                   )}
                 </ThirdwebProvider>
+
               </div>
               <IconButton
                 variant="text"
@@ -147,9 +178,17 @@ const Header = () => {
             <div className="flex items-center gap-x-1"></div>
           </MobileNav>
         </Navbar>
-      </div>
+
+        {/* Render the sidebar only when sidebarOpen is true */}
+        {sidebarOpen && <DefaultSidebar />}
+          </div>
     </div>
   );
 };
 
 export default Header;
+
+
+
+
+
