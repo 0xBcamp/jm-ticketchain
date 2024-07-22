@@ -29,7 +29,7 @@ const SearchEvent = () => {
           address: contractAddress,
         });
 
-        const totalEvents = 20; // Assume we want to fetch the first 10 events
+        const totalEvents = 10; // Assume we want to fetch the first 10 events
         const eventPromises = [];
 
         for (let eventId = 0; eventId < totalEvents; eventId++) {
