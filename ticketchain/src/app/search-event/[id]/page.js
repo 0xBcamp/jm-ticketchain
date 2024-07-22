@@ -24,18 +24,6 @@ const EventDes =  () => {
   const chainId = 919;
   const contractAddress = "0x24933eB4854f95285e54F641bb67D6C0D8bD6C91";
 
-  
-  useEffect(() => {
-    if (id) {
-      const foundEvent = events.find((event) => event.id === parseInt(id, 10));
-      setEvent(foundEvent);
-    }
-  }, [id]);
-
-  if (!id) {
-    return <div>Loading...</div>;
-  }
-
   useEffect(() => {
     if (id) {
       // Fetch the event data from localStorage or another data source

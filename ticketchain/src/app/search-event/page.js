@@ -17,7 +17,7 @@ const client = createThirdwebClient({
 const chainId = 919;
 const contractAddress = "0x24933eB4854f95285e54F641bb67D6C0D8bD6C91";
 
-const searchEvent = () => {
+const SearchEvent = () => {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
@@ -103,4 +103,4 @@ const searchEvent = () => {
   );
 };
 
-export default searchEvent;
+export default SearchEvent;
