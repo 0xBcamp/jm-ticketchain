@@ -7,7 +7,7 @@ import { createThirdwebClient, getContract, readContract } from "thirdweb";
 import { defineChain } from "thirdweb/chains";
 import { useActiveAccount } from "thirdweb/react";
 
-const page = () => {
+const Page = () => {
   const [_name, setName] = useState("");
   const [_date, setDate] = useState(0);
   const [_time, setTime] = useState(0);
@@ -134,4 +134,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
