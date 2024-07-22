@@ -13,10 +13,17 @@ import { createThirdwebClient } from "thirdweb";
 import { ThirdwebProvider, ConnectButton, lightTheme } from "thirdweb/react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons'; // Import the user icon
+//import { DefaultSidebar } from '../../dashboard/page'; // Correct import path
+import DefaultSidebar from '../../dashboard/page';
 
 const Header = () => {
   const [openNav, setOpenNav] = React.useState(false);
   const [isConnected, setIsConnected] = React.useState(false);
+  const [sidebarOpen, setSidebarOpen] = React.useState(false); // State for sidebar visibility
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen); // Toggle sidebar visibility
+  };
 
   React.useEffect(() => {
     window.addEventListener(
@@ -49,7 +56,7 @@ const Header = () => {
         variant="medium"
         className="p-1 font-normal"
       >
-        <Link href="/about" className="flex items-center">
+        <Link href="/about">
           About
         </Link>
       </Typography>
@@ -58,7 +65,7 @@ const Header = () => {
         variant="medium"
         className="p-1 font-normal"
       >
-        <Link href="/login" className="flex items-center">
+        <Link href="/login">
           Solution
         </Link>
       </Typography>
@@ -67,7 +74,7 @@ const Header = () => {
         variant="medium"
         className="p-1 font-normal"
       >
-        <Link href="#" className="flex items-center">
+        <Link href="#">
           Pricing
         </Link>
       </Typography>
@@ -76,7 +83,7 @@ const Header = () => {
         variant="medium"
         className="p-1 font-normal"
       >
-        <Link href="/search-event" className="flex items-center">
+        <Link href="/search-event">
           Browse Events
         </Link>
       </Typography>
@@ -112,11 +119,12 @@ const Header = () => {
                     })}
                   />
                 </ThirdwebProvider>
-                <Link href="/dashboard">
-                  <button className="bg-cyan-700 text-white py-2 px-4 rounded-md flex items-center justify-center">
-                    <FontAwesomeIcon icon={faUser} />
-                  </button>
-                </Link>
+                <button 
+                  className="bg-cyan-700 text-white py-2 px-4 rounded-md flex items-center justify-center"
+                  onClick={toggleSidebar} // Toggle sidebar on click
+                >
+                  <FontAwesomeIcon icon={faUser} />
+                </button>
                 {isConnected && (
                   <Link href="">
                     <Avatar
@@ -171,11 +179,16 @@ const Header = () => {
             <div className="flex items-center gap-x-1"></div>
           </MobileNav>
         </Navbar>
+        {/* Render the sidebar only when sidebarOpen is true */}
+        {sidebarOpen && <DefaultSidebar />}
       </div>
     </div>
   );
 };
 
 export default Header;
+
+
+
 
 

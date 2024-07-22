@@ -1,4 +1,4 @@
-/* Sidebar.css */
+/* Sidebar.css
 .sidebar {
   width: 500px;
   height: 100%;
@@ -56,11 +56,7 @@
 
 .dashboard-content {
   margin-left: 260px; /* Adjust based on the width of your sidebar */
-  padding: 20px;
-}
+  /*padding: 20px;
+} /*
 
-  
-  
-  
-  
   
