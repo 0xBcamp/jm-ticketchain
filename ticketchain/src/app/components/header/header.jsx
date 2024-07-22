@@ -8,22 +8,26 @@ import {
   MobileNav,
   Typography,
   IconButton,
+  Button,
 } from "@material-tailwind/react";
-import { createThirdwebClient } from "thirdweb";
 import { ThirdwebProvider, ConnectButton, lightTheme } from "thirdweb/react";
+import { useActiveWalletConnectionStatus } from "thirdweb/react";
+import { createThirdwebClient } from "thirdweb";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons'; // Import the user icon
 //import { DefaultSidebar } from '../../dashboard/page'; // Correct import path
 import DefaultSidebar from '../../dashboard/page';
 
+
 const Header = () => {
   const [openNav, setOpenNav] = React.useState(false);
-  const [isConnected, setIsConnected] = React.useState(false);
-  const [sidebarOpen, setSidebarOpen] = React.useState(false); // State for sidebar visibility
-
-  const toggleSidebar = () => {
+  const isConnected = useActiveWalletConnectionStatus();
+  console.log(isConnected)
+    const [sidebarOpen, setSidebarOpen] = React.useState(false); // State for sidebar visibility
+ const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen); // Toggle sidebar visibility
   };
+
 
   React.useEffect(() => {
     window.addEventListener(
@@ -97,7 +101,8 @@ const Header = () => {
           <div className="flex items-center justify-between">
             <Typography className="mr-4 cursor-pointer py-1.5 font-medium primary-text">
               <Link href="/">
-                <h1 className="text-left text-2xl m-auto">
+                <h1 className="text-left text-2xl m-auto ">
+
                   <span className="font-extrabold">Ticket</span>
                   <span>chain</span>
                 </h1>
@@ -107,33 +112,27 @@ const Header = () => {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-x-4">
                 <ThirdwebProvider>
-                  <ConnectButton
-                    client={client}
-                    theme={lightTheme({
-                      colors: {
-                        accentText: "#39a3c6",
-                        accentButtonBg: "#39a3c6",
-                        primaryText: "#2a7483",
-                        primaryButtonBg: "#2e94a8",
-                      },
-                    })}
-                  />
+                  <ConnectButton client={client} theme={lightTheme({
+                    colors: {
+                      accentText: "#39a3c6",
+                      accentButtonBg: "#39a3c6",
+                      primaryText: "#2a7483",
+                      primaryButtonBg: "#2e94a8",
+                    },
+                  })} />
+                  {isConnected === "connected" ? (
+                    <Link href="">
+                      <Avatar
+                        src="https://docs.material-tailwind.com/img/face-2.jpg"
+                        alt="avatar"
+                        className="border shadow"
+                      />
+                    </Link>
+                  ) : (
+                    ""
+                  )}
                 </ThirdwebProvider>
-                <button 
-                  className="bg-cyan-700 text-white py-2 px-4 rounded-md flex items-center justify-center"
-                  onClick={toggleSidebar} // Toggle sidebar on click
-                >
-                  <FontAwesomeIcon icon={faUser} />
-                </button>
-                {isConnected && (
-                  <Link href="">
-                    <Avatar
-                      src="https://docs.material-tailwind.com/img/face-2.jpg"
-                      alt="avatar"
-                      className="border shadow"
-                    />
-                  </Link>
-                )}
+
               </div>
               <IconButton
                 variant="text"
@@ -179,9 +178,10 @@ const Header = () => {
             <div className="flex items-center gap-x-1"></div>
           </MobileNav>
         </Navbar>
+
         {/* Render the sidebar only when sidebarOpen is true */}
         {sidebarOpen && <DefaultSidebar />}
-      </div>
+          </div>
     </div>
   );
 };
