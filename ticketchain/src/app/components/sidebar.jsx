@@ -77,6 +77,17 @@ const Sidebar = () => {
         </ListItem>
         <ListItem>
           <Link
+            href="/dashboard/createevent"
+            className="flex items-center w-full text-white"
+          >
+            <ListItemPrefix>
+              <UserCircleIcon className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+            Create Event
+          </Link>
+        </ListItem>
+        <ListItem>
+          <Link
             href="/settings"
             className="flex items-center w-full text-white"
           >
