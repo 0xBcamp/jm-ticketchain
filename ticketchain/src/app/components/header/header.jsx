@@ -13,8 +13,8 @@ import {
 import { ThirdwebProvider, ConnectButton, lightTheme } from "thirdweb/react";
 import { useActiveWalletConnectionStatus } from "thirdweb/react";
 import { createThirdwebClient } from "thirdweb";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons'; // Import the user icon
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faUser } from '@fortawesome/free-solid-svg-icons'; // Import the user icon
 //import { DefaultSidebar } from '../../dashboard/page'; // Correct import path
 import DefaultSidebar from '../../dashboard/page';
 
@@ -23,8 +23,8 @@ const Header = () => {
   const [openNav, setOpenNav] = React.useState(false);
   const isConnected = useActiveWalletConnectionStatus();
   console.log(isConnected)
-    const [sidebarOpen, setSidebarOpen] = React.useState(false); // State for sidebar visibility
- const toggleSidebar = () => {
+  const [sidebarOpen, setSidebarOpen] = React.useState(false); // State for sidebar visibility
+  const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen); // Toggle sidebar visibility
   };
 
@@ -69,7 +69,7 @@ const Header = () => {
         variant="medium"
         className="p-1 font-normal"
       >
-        <Link href="/login">
+        <Link href="#">
           Solution
         </Link>
       </Typography>
@@ -121,7 +121,7 @@ const Header = () => {
                     },
                   })} />
                   {isConnected === "connected" ? (
-                    <Link href="">
+                    <Link href="/dashboard">
                       <Avatar
                         src="https://docs.material-tailwind.com/img/face-2.jpg"
                         alt="avatar"
@@ -181,7 +181,7 @@ const Header = () => {
 
         {/* Render the sidebar only when sidebarOpen is true */}
         {sidebarOpen && <DefaultSidebar />}
-          </div>
+      </div>
     </div>
   );
 };

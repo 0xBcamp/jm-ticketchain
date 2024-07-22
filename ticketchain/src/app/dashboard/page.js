@@ -11,6 +11,8 @@ import {
   ListItemSuffix,
   Chip,
 } from "@material-tailwind/react";
+import { Avatar } from "@material-tailwind/react";
+
 import {
   PresentationChartBarIcon,
   ShoppingBagIcon,
@@ -21,58 +23,114 @@ import {
 } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import React from "react";
+import { ThirdwebProvider, ConnectButton, lightTheme } from "thirdweb/react";
+import { createThirdwebClient } from "thirdweb";
+import { useActiveWalletConnectionStatus } from "thirdweb/react";
 
 const DefaultSidebar = () => {
+  const isConnected = useActiveWalletConnectionStatus();
+
+  const client = createThirdwebClient({
+    clientId: "3a1b881fdf47d438ea101e2972c175fa",
+  });
+
+  React.useEffect(() => {
+    // Check Thirdweb connection status
+    const checkConnection = async () => {
+      if (client && client.isConnected) {
+        const isConnected = client.isConnected;
+        setIsConnected(isConnected);
+        console.log(isConnected);
+      }
+    };
+
+    checkConnection();
+  }, [client]);
   return (
-    <div className="fixed top-0 left-0 h-full w-72 p-4 shadow-xl shadow-blue-gray-900/5 z-50 bg-white">
-      <Card className="h-full w-full p-4 bg-white shadow-blue-gray-900/5">
+    <div className="  left-0 h-screen w-72 p-4 shadow-xl shadow-blue-gray-900/5 z-50 bg-cyan-800">
+      <Card className="h-full w-full p-4 bg-cyan-800 shadow-blue-gray-900/5">
         <div className="mb-2 p-4">
-          <Typography variant="h5" color ="cyan-700">
+          <Typography variant="h5" color="white">
             Dashboard
           </Typography>
         </div>
         <List>
           <ListItem>
-            <Link href="/dashboard" className="flex items-center w-full text-cyan-700">
+            <Link
+              href="/dashboard"
+              className="flex items-center w-full text-white"
+            >
               <ListItemPrefix>
-                <PresentationChartBarIcon className="h-5 w-5 text-cyan-700" />
+                <PresentationChartBarIcon className="h-5 w-5 text-white" />
               </ListItemPrefix>
               Tickets
             </Link>
           </ListItem>
           <ListItem>
-            <Link href="/profile" className="flex items-center w-full text-cyan-700">
+            <Link
+              href="/profile"
+              className="flex items-center w-full text-white"
+            >
               <ListItemPrefix>
-                <UserCircleIcon className="h-5 w-5 text-cyan-700" />
+                <UserCircleIcon className="h-5 w-5 text-white" />
               </ListItemPrefix>
               Profile
             </Link>
           </ListItem>
           <ListItem>
-            <Link href="/settings" className="flex items-center w-full text-cyan-700">
+            <Link
+              href="/settings"
+              className="flex items-center w-full text-white"
+            >
               <ListItemPrefix>
-                <Cog6ToothIcon className="h-5 w-5 text-cyan-700" />
+                <Cog6ToothIcon className="h-5 w-5 text-white" />
               </ListItemPrefix>
               Settings
             </Link>
           </ListItem>
           <ListItem>
-            <Link href="/logout" className="flex items-center w-full text-cyan-700">
-              <ListItemPrefix>
-                <PowerIcon className="h-5 w-5 text-cyan-700" />
-              </ListItemPrefix>
-              Log Out
-            </Link>
+            <ThirdwebProvider>
+              <ConnectButton
+                client={client}
+                theme={lightTheme({
+                  colors: {
+                    accentText: "#39a3c6",
+                    accentButtonBg: "#39a3c6",
+                    primaryText: "#2a7483",
+                    primaryButtonBg: "#2e94a8",
+                  },
+                })}
+              />
+            </ThirdwebProvider>
           </ListItem>
         </List>
       </Card>
+      {isConnected === "connected" ? (
+        ""
+      ) : (
+        <div className="w-full h-full absolute top-0  bg-gray-900/50 flex">
+          <div className="m-auto">
+            <h1>Connect wallet to see Dashboard</h1>
+         <ThirdwebProvider>
+              <ConnectButton
+                client={client}
+                theme={lightTheme({
+                  colors: {
+                    accentText: "#39a3c6",
+                    accentButtonBg: "#39a3c6",
+                    primaryText: "#2a7483",
+                    primaryButtonBg: "#2e94a8",
+                  },
+                })}
+              />
+            </ThirdwebProvider></div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default DefaultSidebar;
-
-
 
 //export default page
 
@@ -133,14 +191,3 @@ export default DefaultSidebar;
 // };
 
 // export default Dashboard;
-
-
-
-
-
-
-
-
-
-
-
