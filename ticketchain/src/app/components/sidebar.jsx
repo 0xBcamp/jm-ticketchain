@@ -45,7 +45,7 @@ const Sidebar = () => {
     }, [client]);
 
   return (
-    <div> <div className=" left-0 h-screen w-72 p-4 shadow-xl shadow-blue-gray-900/5 z-50 bg-cyan-800">
+    <div> <div className=" left-0 h-full w-72 p-4 shadow-xl shadow-blue-gray-900/5 z-50 bg-cyan-800">
     <Card className="h-full w-full p-4 bg-cyan-800 shadow-blue-gray-900/5">
       <div className="mb-2 p-4">
         <Typography variant="h5" color="white">

@@ -76,6 +76,7 @@ const SearchEvent = () => {
     fetchEventData();
   }, []);
 
+
   return (
     <div className="">
       <div className="grid min-h-[140px] w-full place-items-center overflow-x-scroll rounded-lg lg:p-6 p-0 lg:overflow-visible">

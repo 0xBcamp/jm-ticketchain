@@ -11,6 +11,7 @@ import { prepareContractCall, sendTransaction, createThirdwebClient, getContract
 import { useSendTransaction } from "thirdweb/react";
 import { defineChain } from "thirdweb/chains";
 
+
 const EventDes =  () => {
   const router = useRouter();
   // const eventId = router.query?.eventId;
