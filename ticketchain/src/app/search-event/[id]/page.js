@@ -62,7 +62,7 @@ const EventDes = () => {
             // Convert IPFS hash to URL
             const ipfsHash = event.eventImageIPFSHash.replace("ipfs://", "");
             const url = `https://ipfs.io/ipfs/${ipfsHash}`;
-
+console.log(ipfsHash);
             const response = await fetch(url);
             const blob = await response.blob();
             const objectUrl = URL.createObjectURL(blob);
@@ -117,7 +117,7 @@ console.log(ticketPriceInWei)
       const { transactionHash } = await sendTransaction({
         transaction,
         account,
-        value: ticketPriceInWei,
+        value: event.ticketPrice,
         onTransactionSent: (result) => {
           console.log("Transaction submitted", result.transactionHash);
           toast.success(
