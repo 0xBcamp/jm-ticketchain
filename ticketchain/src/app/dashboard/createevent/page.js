@@ -16,6 +16,7 @@ import { defineChain } from "thirdweb/chains";
 import { useActiveAccount } from "thirdweb/react";
 import { toast } from "react-toastify";
 import { Spinner } from "@material-tailwind/react";
+import { upload } from "thirdweb/storage";
 
 const Page = () => {
   const [_name, setName] = useState("");
@@ -30,6 +31,8 @@ const Page = () => {
   const [hash, setHash] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const openDialog = () => {
     setIsOpen(true);
@@ -39,7 +42,7 @@ const Page = () => {
     setIsOpen(false);
   };
 
-  // console.log(account);
+  console.log(account);
   const client = createThirdwebClient({
     clientId: "3a1b881fdf47d438ea101e2972c175fa",
   });
@@ -95,6 +98,21 @@ const Page = () => {
 
       const _ticketPrice = convertEthToWei(ethValue);
 
+        if (selectedImage) {
+          try {
+            const uri = await upload({
+              client,
+              files: [selectedImage]
+            });
+            setEventImageIPFSHash(uri);
+            console.log('Image uploaded successfully:', uri);
+          } catch (error) {
+            console.error('Error uploading image:', error);
+          }
+        }
+      
+
+
       const transaction = await prepareContractCall({
         contract,
         method:
@@ -123,6 +141,20 @@ const Page = () => {
     } catch (error) {
       console.error(error);
       toast.error("Error creating Event");
+    }
+  };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file && file.size <= 100 * 1024) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setSelectedImage(file);
+    } else {
+      alert('Image size should be less than 100KB');
     }
   };
 
@@ -211,15 +243,26 @@ const Page = () => {
         </label>
         <br />
         <label>
-          Event Image IPFS Hash:
+          Event Image :
+
+          <input id="imageup" type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
           <Input
             type="text"
+            disabled
             value={_eventImageIPFSHash}
             onChange={(e) => setEventImageIPFSHash(e.target.value)}
           />
+
         </label>
+<label htmlFor="imageup" className="border block rounded-lg p-20 bg-cyan-50">
+<Typography className="text-center">Click here to upload Image</Typography>
+<div className="flex m-auto">{imagePreview && <img src={imagePreview} alt="Preview" style={{ maxWidth: '100px' }} />}
+</div>
+</label>
         <br />
-        <Button type="submit" className="flex gap-2 m-auto bg-cyan-700">Create Event{loading && <Spinner color="white"/>}</Button>
+        <Button type="submit" className="flex gap-2 m-auto bg-cyan-700">
+          Create Event{loading && <Spinner color="white" />}
+        </Button>
       </form>
 
       {/* Dialog container */}

@@ -7,21 +7,45 @@ import { Button } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
 import { ethers } from "ethers";
 import { TransactionButton } from "thirdweb";
-import { prepareContractCall, sendTransaction, createThirdwebClient, getContract, readContract } from "thirdweb";
+import {
+  prepareContractCall,
+  sendTransaction,
+  createThirdwebClient,
+  getContract,
+  readContract,
+} from "thirdweb";
 import { useSendTransaction } from "thirdweb/react";
 import { defineChain } from "thirdweb/chains";
+import { toast } from "react-toastify";
+import { Spinner } from "@material-tailwind/react";
+import { useActiveWalletConnectionStatus } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
+import { download } from "thirdweb/storage";
 
-
-const EventDes =  () => {
+const EventDes = () => {
   const router = useRouter();
   // const eventId = router.query?.eventId;
   const [event, setEvent] = useState(null);
   const { id } = useParams();
+  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const isConnected = useActiveWalletConnectionStatus();
+  const accountDetails = useActiveAccount();
+  const [eventImage, setEventImage] = useState(null);
+
+  const openDialog = () => {
+    setIsOpen(true);
+  };
+
+  const closeDialog = () => {
+    setIsOpen(false);
+  };
 
   const client = createThirdwebClient({
     clientId: "3a1b881fdf47d438ea101e2972c175fa",
   });
-  
+  const account = accountDetails?.address;
+
   const chainId = 919;
   const contractAddress = "0x24933eB4854f95285e54F641bb67D6C0D8bD6C91";
 
@@ -31,51 +55,104 @@ const EventDes =  () => {
       const events = JSON.parse(localStorage.getItem("events"));
       const event = events.find((e) => e.eventId === id);
       setEvent(event);
+
+      if (event && event.eventImageIPFSHash) {
+        const fetchImage = async () => {
+          try {
+            // Convert IPFS hash to URL
+            const ipfsHash = event.eventImageIPFSHash.replace("ipfs://", "");
+            const url = `https://ipfs.io/ipfs/${ipfsHash}`;
+
+            const response = await fetch(url);
+            const blob = await response.blob();
+            const objectUrl = URL.createObjectURL(blob);
+            setEventImage(objectUrl); // Set the image URL
+          } catch (error) {
+            console.error("Error downloading image:", error);
+          }
+        };
+
+        fetchImage();
+      }
     }
   }, [id]);
 
   if (!event) {
     return <p>Loading...</p>;
   }
-
+  // console.log(event.ticketPrice)
   const convertWeiToEth = (wei) => {
     const eth = parseFloat(wei) / Math.pow(10, 18);
-    return eth.toFixed(4); // Ensures 18 decimal places
+    return eth; 
+  };
+  const convertEthToWei = (eth) => {
+    return BigInt(Math.floor(parseFloat(eth) * Math.pow(10, 18))).toString();
   };
 
   const contract = getContract({
     client,
     chain: defineChain(chainId),
     address: contractAddress,
-    });
+  });
 
-    const TransactionButton = () => {
-      const onClick = async () => {
-        const transaction = await prepareContractCall({
-          contract,
-          method: "function buyTicket(uint256 _eventId, string _ticketImageIPFSHash) payable",
-          params: [_eventId, _ticketImageIPFSHash],
-        });
-        sendTransaction(transaction, {
-          onTransactionSent: (result) => {
-            console.log("Transaction submitted", result.transactionHash);
-          },
-          onTransactionConfirmed: (receipt) => {
-            console.log("Transaction confirmed", receipt.transactionHash);
-          },
-          onError: (error) => {
-            console.error("Transaction error", error);
-          },
-        });
-      }};
+  const _ticketImageIPFSHash = eventImage;
 
+  const handleTransaction = async () => {
+    const _eventId = id;
+    setLoading(true); // Start the spinner
+    // Set the ticket price in Ether
+
+    try {
+      const ticketPriceInWei = convertEthToWei(event.ticketPrice);
+
+console.log(ticketPriceInWei)
+
+      const transaction = await prepareContractCall({
+        contract,
+        method:
+          "function buyTicket(uint256 _eventId, string _ticketImageIPFSHash) payable",
+        params: [_eventId, _ticketImageIPFSHash],
+      });
+
+      const { transactionHash } = await sendTransaction({
+        transaction,
+        account,
+        value: ticketPriceInWei,
+        onTransactionSent: (result) => {
+          console.log("Transaction submitted", result.transactionHash);
+          toast.success(
+            `Transaction Initiated: Hash- ${result.transactionHash}`
+          );
+          setIsOpen(true);
+        },
+        onTransactionConfirmed: (receipt) => {
+          console.log("Transaction confirmed", receipt.transactionHash);
+          toast.success(
+            `Transaction Confirmed: Hash- ${receipt.transactionHash}`
+          );
+        },
+        onError: (error) => {
+          console.error("Transaction error", error);
+          toast.error(`Error Buying Ticket - ${error}`);
+        },
+      });
+
+      setHash(transactionHash);
+      console.log(`Transaction hash: ${transactionHash}`);
+    } catch (error) {
+      console.error(error);
+      toast.error(`Error Buying Ticket - ${error}`);
+    } finally {
+      setLoading(false); // Stop the spinner
+    }
+  };
 
   return (
     <div className="lg:flex w-full gap-2 border">
       <div className="w-full">
         <img
           className="h-96 w-full rounded-lg object-cover object-center"
-          src={event.image}
+          src={eventImage}
           alt="nature image"
         />
         <div className="py-10 lg:px-40 px-10 flex text-black flex-col gap-3 shadow ">
@@ -91,12 +168,12 @@ const EventDes =  () => {
           </p>
           <p>Organised by:</p>
           <div className="py-4 flex">
-            {/* <TransactionButton
-              // transaction={transaction}
+            <Button
+              onClick={handleTransaction}
+              className="bg-cyan-700 lg:m-3 flex gap-2 m-auto "
             >
-              Confirm Transaction
-            </TransactionButton> */}
-            <Button onClick={TransactionButton} className="bg-cyan-700 lg:m-3">Buy Ticket</Button>
+              Buy Ticket {loading && <Spinner color="white" />}{" "}
+            </Button>
             <span className="bg-yellow-800 text-black m-3 gap-5 p-4 flex">
               <p>Available Tickets </p>
               <span className="font-bold flex text-2xl ">
@@ -171,6 +248,33 @@ const EventDes =  () => {
         </span>
         <div className="border bg-blue-gray-200 h-96"></div>
       </div>
+      {isOpen && (
+        <div className="dialog-container top-0 left-0 absolute w-full h-full bg-blue-gray-500/50 flex">
+          {/* Dialog content */}
+          <div className="dialog-content w-96 p-10 shadow m-auto bg-white">
+            <div class="flex items-center p-4 font-sans text-2xl antialiased font-semibold leading-snug shrink-0 text-cyan-700 text-center">
+              Successfully Bought Ticket
+            </div>{" "}
+            <div class="relative p-4 my-4 font-sans text-base antialiased font-light leading-relaxed border-t text-wrap border-b border-t-blue-gray-100 border-b-blue-gray-100 text-blue-gray-500">
+              <p className="text-wrap">Transaction Hash: {hash}</p>
+            </div>
+            <div className="dialog-actions flex gap-5">
+              <Button onClick={closeDialog} className="text-red">
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  const url = `https://sepolia.explorer.mode.network/tx/${hash}`;
+                  window.open(url, "_blank");
+                }}
+                className="bg-cyan-700"
+              >
+                View on Etherscan
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

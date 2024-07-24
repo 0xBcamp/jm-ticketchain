@@ -7,6 +7,7 @@ import { createThirdwebClient, getContract, readContract } from "thirdweb";
 import { ThirdwebProvider } from "thirdweb/react";
 import { defineChain } from "thirdweb/chains";
 import { useState, useEffect } from "react";
+// import { download } from "thirdweb/storage";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const contractAddress = "0x24933eB4854f95285e54F641bb67D6C0D8bD6C91";
 const SearchEvent = () => {
   const [events, setEvents] = useState([]);
 
+  
   useEffect(() => {
     const fetchEventData = async () => {
       try {
@@ -29,7 +31,7 @@ const SearchEvent = () => {
           address: contractAddress,
         });
 
-        const totalEvents = 10; // Assume we want to fetch the first 10 events
+        const totalEvents = 15; // Assume we want to fetch the first 10 events
         const eventPromises = [];
 
         for (let eventId = 0; eventId < totalEvents; eventId++) {
@@ -50,6 +52,7 @@ const SearchEvent = () => {
           const formattedDate = date.toLocaleDateString();
           const formattedTime = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+          
           return {
             eventId: event[0].toString(),
             name: event[1],
@@ -66,7 +69,6 @@ const SearchEvent = () => {
         });
 
         setEvents(formattedEventData);
-        console.log(formattedEventData)
 
       } catch (error) {
         console.error("Failed to fetch events:", error);
