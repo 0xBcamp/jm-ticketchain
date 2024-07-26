@@ -88,6 +88,17 @@ const Sidebar = () => {
         </ListItem>
         <ListItem>
           <Link
+            href="/dashboard/myevents"
+            className="flex items-center w-full text-white"
+          >
+            <ListItemPrefix>
+              <UserCircleIcon className="h-5 w-5 text-white" />
+            </ListItemPrefix>
+            My Events
+          </Link>
+        </ListItem>
+        <ListItem>
+          <Link
             href="/settings"
             className="flex items-center w-full text-white"
           >

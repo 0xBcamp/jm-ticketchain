@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
       {/* <QueryClientProvider client={queryClient}> */}
       <div className="flex" >
         <Sidebar />
-        {children}
+        <div className="min-h-screen">{children}</div>
       </div>
       {/* </QueryClientProvider>{" "} */}
     </html>

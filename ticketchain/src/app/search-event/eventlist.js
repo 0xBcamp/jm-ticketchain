@@ -32,8 +32,13 @@ const Eventlist =   ({events}) => {
 
   const [eventImages, setEventImages] = useState({});
 
- 
+  const currentDateTime = new Date();
+  const currentDate = currentDateTime.toLocaleDateString();
 
+  const parseDate = (dateString) => {
+    const [month, day, year] = dateString.split('/');
+    return new Date(year, month - 1, day);
+  };
   const handleCardClick = (eventId) => {
     // Save events data to localStorage or use another data-passing method
     localStorage.setItem('events', JSON.stringify(events));
@@ -193,6 +198,9 @@ const Eventlist =   ({events}) => {
                     />
                   </svg>
                   {event.date} at {event.time}
+                  {parseDate(currentDate) > parseDate(event.date) && (
+                <p className="text-red-500  p-2 font-bold">Event Ended</p>
+              )}
                 </Typography>
                 <Typography
                   variant="subtitle2"
@@ -224,6 +232,7 @@ const Eventlist =   ({events}) => {
               </CardBody>
               <CardFooter className="pt-0">
                   <Button onClick={() => handleCardClick(event.eventId)} className="bg-cyan-700">Buy Ticket</Button>
+                  <p>{event.price}</p>
               </CardFooter>
             </Card>
           )))

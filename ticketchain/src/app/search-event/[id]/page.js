@@ -13,6 +13,7 @@ import {
   createThirdwebClient,
   getContract,
   readContract,
+  toWei,
 } from "thirdweb";
 import { useSendTransaction } from "thirdweb/react";
 import { defineChain } from "thirdweb/chains";
@@ -21,6 +22,14 @@ import { Spinner } from "@material-tailwind/react";
 import { useActiveWalletConnectionStatus } from "thirdweb/react";
 import { useActiveAccount } from "thirdweb/react";
 import { download } from "thirdweb/storage";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Input,
+  Modal,
+  Typography,
+} from "@material-tailwind/react";
 
 const EventDes = () => {
   const router = useRouter();
@@ -32,7 +41,15 @@ const EventDes = () => {
   const isConnected = useActiveWalletConnectionStatus();
   const accountDetails = useActiveAccount();
   const [eventImage, setEventImage] = useState(null);
+  const [hash, setHash] = useState("");
+  const currentDateTime = new Date();
+  console.log(currentDateTime.toLocaleDateString());
 
+  const currentDate = currentDateTime.toLocaleDateString();
+  const parseDate = (dateString) => {
+    const [month, day, year] = dateString.split('/');
+    return new Date(year, month - 1, day);
+  };
   const openDialog = () => {
     setIsOpen(true);
   };
@@ -44,7 +61,8 @@ const EventDes = () => {
   const client = createThirdwebClient({
     clientId: "3a1b881fdf47d438ea101e2972c175fa",
   });
-  const account = accountDetails?.address;
+  const account = accountDetails;
+  // const account = account2?.toLocaleLowerCase()
 
   const chainId = 919;
   const contractAddress = "0x24933eB4854f95285e54F641bb67D6C0D8bD6C91";
@@ -62,7 +80,7 @@ const EventDes = () => {
             // Convert IPFS hash to URL
             const ipfsHash = event.eventImageIPFSHash.replace("ipfs://", "");
             const url = `https://ipfs.io/ipfs/${ipfsHash}`;
-console.log(ipfsHash);
+            console.log(ipfsHash);
             const response = await fetch(url);
             const blob = await response.blob();
             const objectUrl = URL.createObjectURL(blob);
@@ -83,10 +101,7 @@ console.log(ipfsHash);
   // console.log(event.ticketPrice)
   const convertWeiToEth = (wei) => {
     const eth = parseFloat(wei) / Math.pow(10, 18);
-    return eth; 
-  };
-  const convertEthToWei = (eth) => {
-    return BigInt(Math.floor(parseFloat(eth) * Math.pow(10, 18))).toString();
+    return eth;
   };
 
   const contract = getContract({
@@ -103,42 +118,25 @@ console.log(ipfsHash);
     // Set the ticket price in Ether
 
     try {
-      const ticketPriceInWei = convertEthToWei(event.ticketPrice);
-
-console.log(ticketPriceInWei)
-
       const transaction = await prepareContractCall({
         contract,
         method:
           "function buyTicket(uint256 _eventId, string _ticketImageIPFSHash) payable",
         params: [_eventId, _ticketImageIPFSHash],
+        value: event.ticketPrice,
+        to: event.organizer,
       });
 
       const { transactionHash } = await sendTransaction({
-        transaction,
         account,
-        value: event.ticketPrice,
-        onTransactionSent: (result) => {
-          console.log("Transaction submitted", result.transactionHash);
-          toast.success(
-            `Transaction Initiated: Hash- ${result.transactionHash}`
-          );
-          setIsOpen(true);
-        },
-        onTransactionConfirmed: (receipt) => {
-          console.log("Transaction confirmed", receipt.transactionHash);
-          toast.success(
-            `Transaction Confirmed: Hash- ${receipt.transactionHash}`
-          );
-        },
-        onError: (error) => {
-          console.error("Transaction error", error);
-          toast.error(`Error Buying Ticket - ${error}`);
-        },
+        transaction,
+        to: event.organizer,
       });
 
       setHash(transactionHash);
       console.log(`Transaction hash: ${transactionHash}`);
+      toast.success(`Transaction Confirmed: Hash- ${receipt.transactionHash}`);
+      setIsOpen(true);
     } catch (error) {
       console.error(error);
       toast.error(`Error Buying Ticket - ${error}`);
@@ -155,7 +153,30 @@ console.log(ticketPriceInWei)
           src={eventImage}
           alt="nature image"
         />
+        <Card className="bg-yellow-100">
+          <CardBody>
+            <Typography color="red" className="text-center">
+              {" "}
+              Ensure youre connected to Mode Sepolia Chain to buy Otherwise it
+              Fails. Visit{" "}
+              <a
+                target="_blank"
+                className="text-blue-500"
+                href="https://rpc.info/mode-testnet"
+              >
+                https://rpc.info/mode-testnet
+              </a>{" "}
+              to add network to metamask
+              <span></span>
+            </Typography>
+          </CardBody>
+        </Card>
         <div className="py-10 lg:px-40 px-10 flex text-black flex-col gap-3 shadow ">
+        {parseDate(currentDate) > parseDate(event.date) && (
+            <p className="text-red-500 text-sm   p-2 font-bold">
+              Event Ended
+            </p>
+          )}
           <p className="lg:text-2xl  text-blue-gray-700">
             ETH {convertWeiToEth(event.ticketPrice)} / ticket
           </p>
@@ -166,13 +187,12 @@ console.log(ticketPriceInWei)
           <p>
             {event.date} at {event.time}
           </p>
-          <p>Organised by:</p>
           <div className="py-4 flex">
             <Button
               onClick={handleTransaction}
               className="bg-cyan-700 lg:m-3 flex gap-2 m-auto "
             >
-              Buy Ticket {loading && <Spinner color="white" />}{" "}
+              Buy Ticket {loading && <Spinner color="white" />}
             </Button>
             <span className="bg-yellow-800 text-black m-3 gap-5 p-4 flex">
               <p>Available Tickets </p>
@@ -249,9 +269,9 @@ console.log(ticketPriceInWei)
         <div className="border bg-blue-gray-200 h-96"></div>
       </div>
       {isOpen && (
-        <div className="dialog-container top-0 left-0 absolute w-full h-full bg-blue-gray-500/50 flex">
+        <div className="dialog-container top-0 left-0 absolute w-full h-full bg-blue-gray-500/50 flex flex-wrap">
           {/* Dialog content */}
-          <div className="dialog-content w-96 p-10 shadow m-auto bg-white">
+          <div className="dialog-content w-full p-10 shadow m-auto bg-white">
             <div class="flex items-center p-4 font-sans text-2xl antialiased font-semibold leading-snug shrink-0 text-cyan-700 text-center">
               Successfully Bought Ticket
             </div>{" "}
