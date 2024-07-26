@@ -92,7 +92,7 @@ const MyTicket = () => {
         {tickets.length > 0 ? (
           tickets.map((ticket) => (
             <div key={ticket.ticketId} className="">
-              <Card className="w-full max-w-[30rem] flex-row text-wrap bg-yellow-200">
+              <Card className="w-full  flex-row text-wrap bg-yellow-200">
                 <CardHeader
                   shadow={false}
                   floated={false}

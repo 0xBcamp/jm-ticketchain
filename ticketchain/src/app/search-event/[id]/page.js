@@ -44,11 +44,12 @@ const EventDes = () => {
   const [hash, setHash] = useState("");
   const currentDateTime = new Date();
   console.log(currentDateTime.toLocaleDateString());
-
+  // console.log(event.date)
   const currentDate = currentDateTime.toLocaleDateString();
+
   const parseDate = (dateString) => {
-    const [month, day, year] = dateString.split('/');
-    return new Date(year, month - 1, day);
+    const [day, month,  year] = dateString.split('/');
+    return new Date(day, month - 1, year );
   };
   const openDialog = () => {
     setIsOpen(true);
@@ -144,7 +145,8 @@ const EventDes = () => {
       setLoading(false); // Stop the spinner
     }
   };
-
+  const eventDate = parseDate(event.date);
+  const isEventEnded = eventDate < currentDate;
   return (
     <div className="lg:flex w-full gap-2 border">
       <div className="w-full">
@@ -172,7 +174,7 @@ const EventDes = () => {
           </CardBody>
         </Card>
         <div className="py-10 lg:px-40 px-10 flex text-black flex-col gap-3 shadow ">
-        {parseDate(currentDate) > parseDate(event.date) && (
+        {isEventEnded &&  (
             <p className="text-red-500 text-sm   p-2 font-bold">
               Event Ended
             </p>

@@ -61,7 +61,7 @@ const Sidebar = () => {
             <ListItemPrefix>
               <PresentationChartBarIcon className="h-5 w-5 text-white" />
             </ListItemPrefix>
-            Tickets
+            My Tickets
           </Link>
         </ListItem>
         <ListItem>

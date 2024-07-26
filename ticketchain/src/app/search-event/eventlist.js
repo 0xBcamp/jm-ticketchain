@@ -45,7 +45,10 @@ const Eventlist =   ({events}) => {
     router.push(`../search-event/${eventId}`);
   };
 
- 
+  const convertWeiToEth = (wei) => {
+    const eth = parseFloat(wei) / Math.pow(10, 18);
+    return eth;
+  };
   
   const client = createThirdwebClient({
     clientId: "3a1b881fdf47d438ea101e2972c175fa",
@@ -199,7 +202,7 @@ const Eventlist =   ({events}) => {
                   </svg>
                   {event.date} at {event.time}
                   {parseDate(currentDate) > parseDate(event.date) && (
-                <p className="text-red-500  p-2 font-bold">Event Ended</p>
+                <p className="text-red-500  m-auto  font-bold">Event Ended</p>
               )}
                 </Typography>
                 <Typography
@@ -230,9 +233,9 @@ const Eventlist =   ({events}) => {
                   {event.location}
                 </Typography>
               </CardBody>
-              <CardFooter className="pt-0">
+              <CardFooter className="pt-0 flex">
                   <Button onClick={() => handleCardClick(event.eventId)} className="bg-cyan-700">Buy Ticket</Button>
-                  <p>{event.price}</p>
+                  <p className="m-auto">ETH {convertWeiToEth(event.ticketPrice)} / ticket</p>
               </CardFooter>
             </Card>
           )))
