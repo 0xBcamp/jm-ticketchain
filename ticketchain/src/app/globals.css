@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
- background-color: white;
+ background-color: rgb(255, 255, 255);
  color: #0C8596; 
  font-family: Montserrat;
 
@@ -11,7 +11,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   color: #0C8596; 
 }
 

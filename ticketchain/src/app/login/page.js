@@ -70,7 +70,7 @@ const login = () => {
             Sign In
           </button>
           <p class="flex justify-center mt-6 font-sans text-sm antialiased font-light leading-normal text-inherit">
-            Don't have an account?
+            Don&apos;t have an account?
             <a
               href="#signup"
               class="block ml-1 font-sans text-sm antialiased font-bold leading-normal text-blue-gray-900"

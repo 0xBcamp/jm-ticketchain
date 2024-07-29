@@ -1,15 +1,90 @@
-import React from "react";
+"use client";
+
 import dynamic from "next/dynamic";
+import Eventlist from "./eventlist";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createThirdwebClient, getContract, readContract } from "thirdweb";
+import { ThirdwebProvider } from "thirdweb/react";
+import { defineChain } from "thirdweb/chains";
+import { useState, useEffect } from "react";
+// import { download } from "thirdweb/storage";
 
-// const Input = dynamic(() => import("@material-tailwind/react").then((mod) => mod.Input), { ssr: false });
+const queryClient = new QueryClient();
 
-const searchEvent = () => {
+const client = createThirdwebClient({
+  clientId: "3a1b881fdf47d438ea101e2972c175fa",
+});
+
+const chainId = 919;
+const contractAddress = "0x24933eB4854f95285e54F641bb67D6C0D8bD6C91";
+
+const SearchEvent = () => {
+  const [events, setEvents] = useState([]);
+
+  
+  useEffect(() => {
+    const fetchEventData = async () => {
+      try {
+        const contract = getContract({
+          client,
+          chain: defineChain(chainId),
+          address: contractAddress,
+        });
+
+        const totalEvents = 15; // Assume we want to fetch the first 10 events
+        const eventPromises = [];
+
+        for (let eventId = 0; eventId < totalEvents; eventId++) {
+          eventPromises.push(
+            readContract({
+              contract,
+              method:"function events(uint256) view returns (uint256 eventId, string name, uint256 date, uint256 time, string location, uint256 ticketPrice, uint256 totalTickets, uint256 availableTickets, address organizer, uint256 funds, string eventImageIPFSHash)",
+              params: [eventId],
+
+            })
+          );
+        }
+        const eventData = await Promise.all(eventPromises);
+        const formattedEventData = eventData.map(event => {
+
+          const date = new Date(Number(event[2]) * 1000); // Convert seconds to milliseconds
+          const time = new Date(Number(event[3]) * 1000); // Convert seconds to milliseconds
+          const formattedDate = date.toLocaleDateString();
+          const formattedTime = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+          
+          return {
+            eventId: event[0].toString(),
+            name: event[1],
+            date: formattedDate,
+            time: formattedTime,
+            location: event[4],
+            ticketPrice: event[5].toString(),
+            totalTickets: event[6].toString(),
+            availableTickets: event[7].toString(),
+            organizer: event[8],
+            funds: event[9].toString(),
+            eventImageIPFSHash: event[10],
+          };
+        });
+
+        setEvents(formattedEventData);
+
+      } catch (error) {
+        console.error("Failed to fetch events:", error);
+      }
+    };
+
+    fetchEventData();
+  }, []);
+
+
   return (
     <div className="">
-      <div class="grid min-h-[140px] w-full place-items-center overflow-x-scroll rounded-lg lg:p-6 p-0 lg:overflow-visible">
-        <figure class="relative w-full h-96">
+      <div className="grid min-h-[140px] w-full place-items-center overflow-x-scroll rounded-lg lg:p-6 p-0 lg:overflow-visible">
+        <figure className="relative w-full h-96">
           <img
-            class="object-cover object-center w-full h-full rounded-xl"
+            className="object-cover object-center w-full h-full rounded-xl"
             src="/img/images/crowd.jpg"
             alt="Crowd"
           />
@@ -18,37 +93,17 @@ const searchEvent = () => {
               Browse Events
             </h1>
           </div>
-          <figcaption class="absolute bottom-10 left-2/4 flex  -translate-x-2/4 justify-center rounded-xl border border-white bg-white/75 py-4 px-6 shadow-lg shadow-black/5 saturate-200 backdrop-blur-sm">
-            <div className=" ">
-              <div className="w-full flex  bg-white/50">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="size-10 m-auto p-2"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                  />
-                </svg>
-
-                <input
-                  label="Search"
-                  className="p-3 lg:text-2xl  text-xl  bg-transparent text-black"
-                  placeholder="Search by City or Event Name"
-                />
-              </div>
-            </div>
-          </figcaption>
         </figure>
       </div>
-      <div className="w-full"></div>
+      <div className="w-full">
+        <ThirdwebProvider clientId="3a1b881fdf47d438ea101e2972c175fa">
+          <QueryClientProvider client={queryClient}>
+            <Eventlist events={events} />
+          </QueryClientProvider>
+        </ThirdwebProvider>
+      </div>
     </div>
   );
 };
 
-export default searchEvent;
+export default SearchEvent;

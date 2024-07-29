@@ -12,6 +12,7 @@ import {
 } from "@material-tailwind/react";
 import ticket from "/public/img/brand/ticket.png";
 import { register } from 'swiper/element/bundle';
+import Eventlist from "./search-event/eventlist";
 
 register();
 
@@ -26,24 +27,17 @@ export default function Home() {
           </h1>
           <h1 className=" lg:text-5xl text-3xl ">Say goodbye to ticket lies</h1>
           <div>
-            <div className="flex items-center gap-10 ">
-              <Button
-                variant="text"
-                size="lg"
-                className=" lg:inline-block border border-cyan-700 primary-text"
-              >
-                <span>Sign up</span>
-              </Button>
-              <Link href="/login" >
+            <div className=" ">
+            <Link href="/search-event" className="flex items-center">
 
               <Button
-                //   variant="gradient"
                 size="lg"
-                className=" lg:inline-block bg-cyan-700"
+                className=" lg:inline-block border bg-cyan-700  text-white"
               >
-                <span>Login </span>
+                Browse Events
               </Button>
               </Link>
+            
             </div>
           </div>
         </div>
@@ -51,9 +45,10 @@ export default function Home() {
           <Image src={ticket}></Image>
         </div>
       </main>
-      <div className="bg-cyan-800 h-30 w-full flex items-center p-5">
+      <div className="bg-cyan-800 h-30 w-full flex justify-center p-5">
         <h1 className="text-white  text-3xl text-center ">Decentralized ticketing platform built on Mode Blockchain </h1>
       </div>
+     
     </>
   );
 }
