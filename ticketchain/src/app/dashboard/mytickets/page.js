@@ -42,8 +42,10 @@ const MyTicket = () => {
 
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [recipientAddress, setRecipientAddress] = useState("");
+  const [currentTicketId, setCurrentTicketId] = useState(null);
 
-  useEffect(() => {
     const fetchTicketData = async () => {
       try {
         const contract = getContract({
@@ -90,9 +92,12 @@ const MyTicket = () => {
       }
     };
 
-    fetchTicketData();
-  }, [account, client, contractAddress, chainId]);
+    // fetchTicketData();
+  // }, [account, client, contractAddress, chainId]);
 
+  useEffect(() => {
+    fetchTicketData();
+  }, [account]);
 
   const handleUseTicket = async (ticketId) => {
     setLoading(true);
@@ -140,6 +145,44 @@ const MyTicket = () => {
     }
   };
 
+ const handleTransferTicket = async () => {
+    setLoading(true);
+    try {
+      const contract = getContract({
+        client,
+        chain: defineChain(chainId),
+        address: contractAddress,
+      });
+
+      const transaction = prepareContractCall({
+        contract,
+        method: "function transferFrom(address from, address to, uint256 tokenId)",
+        params: [account.address, recipientAddress, currentTicketId],
+      });
+
+      const { transactionHash } = await sendTransaction({
+        transaction,
+        account,
+      });
+
+      if (transactionHash) {
+        console.log(`Transfer transaction hash: ${transactionHash}`);
+        toast.success(`Ticket ${currentTicketId} has been transferred. Transaction Hash: ${transactionHash}`);
+        // Optionally refresh the ticket data after transfer
+        await fetchTicketData();
+        setIsModalOpen(false); // Close the modal
+        setRecipientAddress(""); // Reset recipient address
+      } else {
+        throw new Error("Transaction hash is not available.");
+      }
+    } catch (error) {
+      console.error("Failed to transfer ticket:", error);
+      toast.error(`Failed to transfer ticket: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
       <h1 className="text-3xl text-center m-auto font-bold py-10">
@@ -149,7 +192,7 @@ const MyTicket = () => {
         {tickets.length > 0 ? (
           tickets.map((ticket) => (
             <div key={ticket.ticketId} className="">
-              <Card className="w-full  flex-row text-wrap bg-yellow-200">
+              <Card className="w-full h-full flex-row text-wrap bg-yellow-200">
                 <CardHeader
                   shadow={false}
                   floated={false}
@@ -158,7 +201,7 @@ const MyTicket = () => {
                   <Image
                     src={ticketimg}
                     alt="card-image"
-                    className="h-full w-full object-cover"
+                    className="h-60 w-60 object-cover"
                   ></Image>
                 </CardHeader>
                 <CardBody>
@@ -180,21 +223,28 @@ const MyTicket = () => {
                   </Typography>
                   <Typography
                     color="gray"
-                    className="mb-8 font-normal text-wrap "
+                    className="mb-8 font-normal text-wrap flex gap-5 "
                   >
                     <Button
                       variant="contained"
                       color="primary"
                       onClick={() => handleUseTicket(ticket.ticketId)}
                       disabled={ticket.used === "Yes" || loading}
+                      className="bg-cyan-800 text-white"
                     >
                       Use Tickeet
                     </Button>{" "}
-                  </Typography>
 
-                  <a href="#" className="inline-block">
-                    <Button variant="text" className="flex items-center gap-2">
-                      info
+
+                    <Button
+                      variant="text"
+                      className="flex items-center gap-2"
+                      onClick={() => {
+                        setCurrentTicketId(ticket.ticketId);
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      Transfer Ticket
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -210,7 +260,8 @@ const MyTicket = () => {
                         />
                       </svg>
                     </Button>
-                  </a>
+                  </Typography>
+
           
                 </CardBody>
               </Card>
@@ -222,6 +273,43 @@ const MyTicket = () => {
           <p>No tickets found for this account.</p>
         )}
       </div>
+
+      {isModalOpen && (
+  <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 ">
+    <div className="bg-white rounded-lg p-6 w-96">
+      <h2 className="text-lg font-bold mb-4">Transfer Ticket</h2>
+      <label className="block mb-2">Recipient Address:</label>
+      <input
+        type="text"
+        value={recipientAddress}
+        onChange={(e) => setRecipientAddress(e.target.value)}
+        className="border border-gray-300 rounded-md p-2 mb-4 w-full"
+        placeholder="Enter recipient address"
+      />
+      <div className="flex justify-between">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleTransferTicket}
+          disabled={!recipientAddress || loading}
+        >
+          Transfer
+        </Button>
+        <Button
+          variant="outlined"
+          color="red"
+          onClick={() => {
+            setIsModalOpen(false); // Close the modal
+            setRecipientAddress(""); // Reset recipient address
+          }}
+        >
+          Cancel
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
