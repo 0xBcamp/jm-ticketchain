@@ -95,7 +95,7 @@ const Header = () => {
   );
 
   return (
-    <div className="w-full z-50 fixed">
+    <div className="w-full z-50 fixed top-0">
       <div>
         <Navbar className="sticky top-0 z-10 h-max max-w-full rounded-none px-4 py-2 lg:px-8 lg:py-4">
           <div className="flex items-center justify-between">
@@ -103,10 +103,10 @@ const Header = () => {
               <Link href="/">
                 <h1 className="text-left text-2xl m-auto ">
 
-                  <span className="font-extrabold md:hidden">Ticket</span>
-                  <span className="font-extrabold lg:hidden">T</span>
+                  <span className="font-extrabold  lg:block hidden">Ticket<span>Chain</span></span>
+                  <span className="font-extrabold lg:hidden">T<span>chain</span></span>
 
-                  <span>chain</span>
+                 
                 </h1>
               </Link>
             </Typography>

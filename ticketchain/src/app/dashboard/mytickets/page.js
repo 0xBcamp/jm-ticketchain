@@ -153,7 +153,7 @@ const MyTicket = () => {
                 <CardHeader
                   shadow={false}
                   floated={false}
-                  className="m-0 w-1/5 shrink-0 rounded-r-none"
+                  className="m-0 w-2/5 shrink-0 rounded-r-none"
                 >
                   <Image
                     src={ticketimg}

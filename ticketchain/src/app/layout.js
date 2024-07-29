@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
         <ToastContainer />
 
         <Header />
-        {children}
+       <div className="lg:mt-20 md:mt-7 ">{children}</div> 
 
       </body>
     </html>

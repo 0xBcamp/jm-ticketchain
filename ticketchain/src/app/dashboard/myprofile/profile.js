@@ -78,25 +78,25 @@ const Profile = () => {
             My Profile
           </h1>
           {address ? (
-            <div>
+            <div className="py-10">
               {/* Display avatar */}
 
               {avatar ? (
-                <>
+                <div className="p-10">
                   <Avatar
                     src= {avatar}
                     alt="avatar"
-                    className="border shadow py-5"
+                    className="border shadow "
                     size="xxl"
                   />
                  
-                </>
+                </div>
               ) : (
                 <div className="w-24 h-24 rounded-full mx-auto mb-4 bg-gray-300 flex items-center justify-center">
                   <span className="text-gray-600">No Avatar</span>
                 </div>
               )}
-              <div className="flex gap-10 flex-wrap text-white">
+              <div className="flex gap-10 flex-wrap text-white m-auto justify-center">
                 <Card className="p-10 h-40 bg-cyan-700/50 w-96">
                   <p className="text-gray-800 break-all">
                     Address: <br></br>
