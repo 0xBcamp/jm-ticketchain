@@ -87,29 +87,7 @@ const Eventlist =   ({events}) => {
     fetchImages();
   }, [filteredEvents]);
 
-  // useEffect(() => {
-  //   const fetchImages = async () => {
-  //     const images = {};
-  //     for (const event of filteredEvents) {
-  //       try {
-  //         const file = await download({
-  //           client,
-  //           uri: event.eventImageIPFSHash,
-  //         });
-  //         const blob = new Blob([file]);
-  //         const url = URL.createObjectURL(blob);
-  //         images[event.eventId] = url; // Assuming each event has a unique id
-  //       } catch (error) {
-  //         console.error("Error downloading image:", error);
-  //       }
-  //     }
-  //     setEventImages(images);
-  //     console.log(images[9])
-
-  //   };
-
-  //   fetchImages();
-  // }, [filteredEvents]);
+ 
   return (
     <div className="flex flex-col justify-center">
       <div className="flex border  rounded-xl px-2 m-auto mb-10 border-cyan-800 lg:w-2/5 w-full ">

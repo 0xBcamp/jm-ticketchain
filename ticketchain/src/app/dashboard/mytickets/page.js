@@ -2,7 +2,13 @@
 
 import dynamic from "next/dynamic";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createThirdwebClient, getContract, readContract } from "thirdweb";
+import {
+  createThirdwebClient,
+  getContract,
+  readContract,
+  prepareContractCall,
+  sendTransaction,
+} from "thirdweb";
 import { ThirdwebProvider } from "thirdweb/react";
 import { defineChain } from "thirdweb/chains";
 import { useState, useEffect } from "react";
@@ -19,6 +25,8 @@ import {
 } from "@material-tailwind/react";
 import ticketimg from "../../../../public/img/brand/ticket.png";
 import Image from "next/image";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const queryClient = new QueryClient();
 
@@ -30,8 +38,10 @@ const chainId = 919;
 const contractAddress = "0x24933eB4854f95285e54F641bb67D6C0D8bD6C91";
 const MyTicket = () => {
   const account = useActiveAccount();
+  const router = useRouter();
 
   const [tickets, setTickets] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchTicketData = async () => {
@@ -83,6 +93,53 @@ const MyTicket = () => {
     fetchTicketData();
   }, [account, client, contractAddress, chainId]);
 
+
+  const handleUseTicket = async (ticketId) => {
+    setLoading(true);
+    try {
+      const contract = getContract({
+        client,
+        chain: defineChain(chainId),
+        address: contractAddress,
+      });
+
+      const transaction = prepareContractCall({
+        contract,
+        method: "function useTicket(uint256 _ticketId)",
+        params: [ticketId],
+      });
+
+      // Await the transaction response
+      const { transactionHash } = await sendTransaction({
+        transaction,
+        account,
+      });
+
+      // Check if transactionHash is available
+      if (transactionHash) {
+        console.log(`Transaction hash: ${transactionHash}`);
+        toast.success(
+          `Ticket ${ticketId} has been used. Transaction Hash: ${transactionHash}`
+        );
+
+        // Update the ticket state to mark it as used
+        setTickets((prevTickets) =>
+          prevTickets.map((ticket) =>
+            ticket.ticketId === ticketId ? { ...ticket, used: true } : ticket
+          )
+        );
+      } else {
+        throw new Error("Transaction hash is not available.");
+      }
+    } catch (error) {
+      console.error("Failed to use ticket:", error);
+      toast.error(`Failed to use ticket: ${error.message}`);
+      // alert(`Error using ticket: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
       <h1 className="text-3xl text-center m-auto font-bold py-10">
@@ -96,7 +153,7 @@ const MyTicket = () => {
                 <CardHeader
                   shadow={false}
                   floated={false}
-                  className="m-0 w-2/5 shrink-0 rounded-r-none"
+                  className="m-0 w-1/5 shrink-0 rounded-r-none"
                 >
                   <Image
                     src={ticketimg}
@@ -113,11 +170,28 @@ const MyTicket = () => {
                     Ticket ID: {ticket.ticketId}
                   </Typography>
                   <Typography variant="h4" color="blue-gray" className="mb-2">
-                  Event ID: {ticket.eventId}                  </Typography>
-                  <Typography color="gray" className="mb-8 font-normal text-wrap ">
-                  Owner: {ticket.owner}
+                    Event ID: {ticket.eventId}{" "}
                   </Typography>
-                  Used: {ticket.used ? "Yes" : "No"}
+                  <Typography
+                    color="gray"
+                    className="mb-8 font-normal text-wrap "
+                  >
+                    Owner: {ticket.owner}
+                  </Typography>
+                  <Typography
+                    color="gray"
+                    className="mb-8 font-normal text-wrap "
+                  >
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleUseTicket(ticket.ticketId)}
+                      disabled={ticket.used === "Yes" || loading}
+                    >
+                      Use Tickeet
+                    </Button>{" "}
+                  </Typography>
+
                   <a href="#" className="inline-block">
                     <Button variant="text" className="flex items-center gap-2">
                       info
@@ -137,6 +211,7 @@ const MyTicket = () => {
                       </svg>
                     </Button>
                   </a>
+          
                 </CardBody>
               </Card>
               <p></p>

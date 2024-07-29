@@ -159,7 +159,7 @@ const Page = () => {
   };
 
   return (
-    <div className="w-full p-20 relative">
+    <div className="w-full lg:p-20 p-5 relative">
       <Card className="bg-yellow-100">
         <CardBody>
           <Typography variant="h5" color="blue-gray" className="mb-2">

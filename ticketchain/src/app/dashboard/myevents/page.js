@@ -228,12 +228,18 @@ const MyEvents = ({ accountDetails }) => {
                 {event.location}
               </Typography>
             </CardBody>
-            <CardFooter className="pt-0">
+            <CardFooter className="pt-0 flex gap-5">
               <Button
                 onClick={() => handleCardClick(event.eventId)}
                 className="bg-cyan-700"
               >
-                Buy Ticket
+                View Event
+              </Button>
+              <Button
+                onClick={() => handleCardClick(event.eventId)}
+                className="bg-yellow-700 text-black"
+              >
+                Sold Tickets
               </Button>
             </CardFooter>
           </Card>

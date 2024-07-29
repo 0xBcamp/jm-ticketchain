@@ -136,7 +136,7 @@ const EventDes = () => {
 
       setHash(transactionHash);
       console.log(`Transaction hash: ${transactionHash}`);
-      toast.success(`Transaction Confirmed: Hash- ${receipt.transactionHash}`);
+      toast.success(`Transaction Confirmed: Hash- ${transactionHash}`);
       setIsOpen(true);
     } catch (error) {
       console.error(error);
@@ -273,7 +273,7 @@ const EventDes = () => {
       {isOpen && (
         <div className="dialog-container top-0 left-0 absolute w-full h-full bg-blue-gray-500/50 flex flex-wrap">
           {/* Dialog content */}
-          <div className="dialog-content w-full p-10 shadow m-auto bg-white">
+          <div className="dialog-content w-fit p-10 shadow m-auto bg-white">
             <div class="flex items-center p-4 font-sans text-2xl antialiased font-semibold leading-snug shrink-0 text-cyan-700 text-center">
               Successfully Bought Ticket
             </div>{" "}

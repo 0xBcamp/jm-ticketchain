@@ -5,150 +5,160 @@ import {
   List,
   ListItem,
   ListItemPrefix,
-  ListItemSuffix,
-  Chip,
+  IconButton,
 } from "@material-tailwind/react";
-import { Avatar } from "@material-tailwind/react";
-
 import {
   PresentationChartBarIcon,
-  ShoppingBagIcon,
   UserCircleIcon,
   Cog6ToothIcon,
-  InboxIcon,
-  PowerIcon,
 } from "@heroicons/react/24/solid";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ThirdwebProvider, ConnectButton, lightTheme } from "thirdweb/react";
 import { createThirdwebClient } from "thirdweb";
 import { useActiveWalletConnectionStatus } from "thirdweb/react";
+
 const Sidebar = () => {
+  const isConnected = useActiveWalletConnectionStatus();
 
-    const isConnected = useActiveWalletConnectionStatus();
+  const client = createThirdwebClient({
+    clientId: "3a1b881fdf47d438ea101e2972c175fa",
+  });
 
-    const client = createThirdwebClient({
-      clientId: "3a1b881fdf47d438ea101e2972c175fa",
-    });
-  
-    React.useEffect(() => {
-      // Check Thirdweb connection status
-      const checkConnection = async () => {
-        if (client && client.isConnected) {
-          const isConnected = client.isConnected;
-          setIsConnected(isConnected);
-          console.log(isConnected);
-        }
-      };
-  
-      checkConnection();
-    }, [client]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768); // Default to true if screen size is large
+
+  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+
+  // Handle window resize to toggle sidebar state
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsSidebarOpen(true); // Open the sidebar on larger screens
+      } else {
+        setIsSidebarOpen(false); // Close the sidebar on smaller screens
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
-    <div> <div className=" left-0 h-full w-72 p-4 shadow-xl shadow-blue-gray-900/5 z-50 bg-cyan-800">
-    <Card className="h-full w-full p-4 bg-cyan-800 shadow-blue-gray-900/5">
-      <div className="mb-2 p-4">
-        <Typography variant="h5" color="white">
-          Dashboard
-        </Typography>
-      </div>
-      <List>
-        <ListItem>
-          <Link
-            href="/dashboard/mytickets"
-            className="flex items-center w-full text-white"
-          >
-            <ListItemPrefix>
-              <PresentationChartBarIcon className="h-5 w-5 text-white" />
-            </ListItemPrefix>
-            My Tickets
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link
-            href="/dashboard/myprofile"
-            className="flex items-center w-full text-white"
-          >
-            <ListItemPrefix>
-              <UserCircleIcon className="h-5 w-5 text-white" />
-            </ListItemPrefix>
-            Profile
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link
-            href="/dashboard/createevent"
-            className="flex items-center w-full text-white"
-          >
-            <ListItemPrefix>
-              <UserCircleIcon className="h-5 w-5 text-white" />
-            </ListItemPrefix>
-            Create Event
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link
-            href="/dashboard/myevents"
-            className="flex items-center w-full text-white"
-          >
-            <ListItemPrefix>
-              <UserCircleIcon className="h-5 w-5 text-white" />
-            </ListItemPrefix>
-            My Events
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link
-            href="/settings"
-            className="flex items-center w-full text-white"
-          >
-            <ListItemPrefix>
-              <Cog6ToothIcon className="h-5 w-5 text-white" />
-            </ListItemPrefix>
-            Settings
-          </Link>
-        </ListItem>
-        <ListItem>
-          <ThirdwebProvider>
-            <ConnectButton
-              client={client}
-              theme={lightTheme({
-                colors: {
-                  accentText: "#39a3c6",
-                  accentButtonBg: "#39a3c6",
-                  primaryText: "#2a7483",
-                  primaryButtonBg: "#2e94a8",
-                },
-              })}
-            />
-          </ThirdwebProvider>
-        </ListItem>
-      </List>
-    </Card>
-    {isConnected === "connected" ? (
-      ""
-    ) : (
-      <div className="w-full h-full absolute top-0  bg-gray-900/50 flex">
-        <div className="m-auto">
-          <h1>Connect wallet to see Dashboard</h1>
-       <ThirdwebProvider>
-            <ConnectButton
-              client={client}
-              theme={lightTheme({
-                colors: {
-                  accentText: "#39a3c6",
-                  accentButtonBg: "#39a3c6",
-                  primaryText: "#2a7483",
-                  primaryButtonBg: "#2e94a8",
-                },
-              })}
-            />
-          </ThirdwebProvider></div>
-      </div>
-    )}
-  </div>
-  </div>
-  )
-}
+    <div className="flex">
+      {/* Conditionally render the sidebar */}
+      {isSidebarOpen && (
+        <div
+          className={`fixed top-0 left-0 h-full w-72 p-4 shadow-xl bg-cyan-800 transition-transform transform ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } z-10`}
+        >
+          <Card className="h-full w-full p-4 bg-cyan-800 shadow-blue-gray-900/5 pt-20">
+            <div className="mb-2 p-4">
+              <Typography variant="h5" color="white">
+                Dashboard
+              </Typography>
+            </div>
+            <List>
+              <ListItem>
+                <Link href="/dashboard/mytickets" className="flex items-center w-full text-white">
+                  <ListItemPrefix>
+                    <PresentationChartBarIcon className="h-5 w-5 text-white" />
+                  </ListItemPrefix>
+                  My Tickets
+                </Link>
+              </ListItem>
+              <ListItem>
+                <Link href="/dashboard/myprofile" className="flex items-center w-full text-white">
+                  <ListItemPrefix>
+                    <UserCircleIcon className="h-5 w-5 text-white" />
+                  </ListItemPrefix>
+                  Profile
+                </Link>
+              </ListItem>
+              <ListItem>
+                <Link href="/dashboard/createevent" className="flex items-center w-full text-white">
+                  <ListItemPrefix>
+                    <UserCircleIcon className="h-5 w-5 text-white" />
+                  </ListItemPrefix>
+                  Create Event
+                </Link>
+              </ListItem>
+              <ListItem>
+                <Link href="/dashboard/myevents" className="flex items-center w-full text-white">
+                  <ListItemPrefix>
+                    <UserCircleIcon className="h-5 w-5 text-white" />
+                  </ListItemPrefix>
+                  My Events
+                </Link>
+              </ListItem>
+              <ListItem>
+                <Link href="/settings" className="flex items-center w-full text-white">
+                  <ListItemPrefix>
+                    <Cog6ToothIcon className="h-5 w-5 text-white" />
+                  </ListItemPrefix>
+                  Settings
+                </Link>
+              </ListItem>
+              <ListItem>
+                <ThirdwebProvider>
+                  <ConnectButton
+                    client={client}
+                    theme={lightTheme({
+                      colors: {
+                        accentText: "#39a3c6",
+                        accentButtonBg: "#39a3c6",
+                        primaryText: "#2a7483",
+                        primaryButtonBg: "#2e94a8",
+                      },
+                    })}
+                  />
+                </ThirdwebProvider>
+              </ListItem>
+            </List>
+          </Card>
+          {isConnected === "connected" ? (
+            ""
+          ) : (
+            <div className="w-full h-full absolute top-0 bg-gray-900/50 flex">
+              <div className="m-auto">
+                <h1>Connect wallet to see Dashboard</h1>
+                <ThirdwebProvider>
+                  <ConnectButton
+                    client={client}
+                    theme={lightTheme({
+                      colors: {
+                        accentText: "#39a3c6",
+                        accentButtonBg: "#39a3c6",
+                        primaryText: "#2a7483",
+                        primaryButtonBg: "#2e94a8",
+                      },
+                    })}
+                  />
+                </ThirdwebProvider>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
-export default Sidebar
+      {/* Main content area */}
+      <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? "ml-72" : "ml-0"}`}>
+        <IconButton variant="text" size="lg" onClick={toggleSidebar} className="ml-3">
+          {isSidebarOpen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+          )}
+        </IconButton>
+      </div>
+    </div>
+  );
+};
+
+export default Sidebar;
